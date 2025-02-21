@@ -8,6 +8,7 @@ This project is an AI-powered harmful language detection system that works in tw
 At its core, the system uses the Unary Toxic BERT model, a deep learning-based NLP model specialized in detecting harmful and offensive language. The model processes incoming text and classifies it based on toxicity levels. Actions such as flagging, warning, muting, or kicking users are taken based on the detected toxicity score.
 
 Key Features
+
 ✅ AI-powered text analysis for harmful content
 
 ✅ Chat interface for real-time toxicity monitoring
@@ -19,6 +20,7 @@ Key Features
 ✅ Automated warnings, muting, and kicking
 
 ✅ Deployed using Replit + Uptime bot
+
 
 ⚠️ Important Note
 This project includes a list of harmful words and phrases strictly for detection and filtering purposes. These words are not intended for offensive use but are necessary for the AI model to function correctly. Please Ignore.
