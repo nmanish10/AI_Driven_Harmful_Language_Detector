@@ -22,7 +22,7 @@ app.add_middleware(
 )
 
 # Replace with your Hugging Face model API URL
-HUGGINGFACE_API_URL = "https://api-inference.huggingface.co/models/nmanish10/AI-DRIVEN_HARMFUL_LANGUAGE_DETECTOR"
+HUGGINGFACE_API_URL = "YOUR_HUGGINGFACE_API_ENDPOINT_HERE"
 HEADERS = {"Authorization": f"Bearer {os.getenv('HUGGINGFACE_ACCESS_TOKEN')}"}
 
 
