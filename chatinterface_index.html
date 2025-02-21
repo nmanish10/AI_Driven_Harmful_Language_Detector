@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI-Driven Harmful Language Detection</title>
+    <link rel="stylesheet" href="style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div class="heading">AI-DRIVEN HARMFUL LANGUAGE DETECTOR</div>
+    <div class="complaint-box">
+    <a href="https://cybercrime.gov.in/" target="_blank">Register a Complaint</a>
+    </div>
+    <div class="chat-container">
+        <!-- Chat 1 -->
+        <div class="chat-box-wrapper">
+            <div class="toggle-container chat1">
+                <div class="toggle-switch" onclick="toggleRestriction(this, 1)"></div>
+                <span class="toggle-text off">OFF</span>
+            </div>
+            <div class="chat-box" id="chatBox1"></div>
+            <div class="input-container">
+                <input type="text" id="userInput1" placeholder="Type a message..." oninput="checkInputForHarmfulContent(1)" onkeypress="handleKeyPress(event, 1)"/>
+                <div class="send-button-container">
+                    <button id="sendButton1" class="send-button" onclick="sendMessage(1)">Send</button>
+                    <div id="tooltip1" class="tooltip"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Chat 2 -->
+        <div class="chat-box-wrapper">
+            <div class="toggle-container chat2">
+                <span class="toggle-text off">OFF</span>
+                <div class="toggle-switch" onclick="toggleRestriction(this, 2)"></div>
+            </div>
+            <div class="chat-box" id="chatBox2"></div>
+            <div class="input-container">
+                <input type="text" id="userInput2" placeholder="Type a message..." oninput="checkInputForHarmfulContent(2)" onkeypress="handleKeyPress(event, 2)"/>
+                <div class="send-button-container">
+                    <button id="sendButton2" class="send-button" onclick="sendMessage(2)">Send</button>
+                    <div id="tooltip2" class="tooltip"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let restrictions = { 1: false, 2: false };
+
+        function toggleRestriction(element, chatNumber) {
+            restrictions[chatNumber] = !restrictions[chatNumber];
+            element.classList.toggle("active");
+
+            const textElement = chatNumber === 1 
+                ? element.nextElementSibling 
+                : element.previousElementSibling;
+
+            textElement.textContent = restrictions[chatNumber] ? "ON" : "OFF";
+            textElement.classList.toggle("off", !restrictions[chatNumber]);
+
+            // Re-check input and update tooltips when restriction changes
+            checkInputForHarmfulContent(1);
+            checkInputForHarmfulContent(2);
+        }
+
+        async function sendMessage(chatNumber) {
+            const inputField = document.getElementById(`userInput${chatNumber}`);
+            const messageText = inputField.value.trim();
+            const sendButton = document.getElementById(`sendButton${chatNumber}`);
+
+            if (messageText === "" || sendButton.disabled) return;
+
+            const senderChatBox = document.getElementById(`chatBox${chatNumber}`);
+            const receiverChatBox = document.getElementById(`chatBox${chatNumber === 1 ? 2 : 1}`);
+
+            addMessage(senderChatBox, messageText, "user-message");
+            setTimeout(() => addMessage(receiverChatBox, messageText, "bot-message"), 200);
+
+            inputField.value = "";
+            sendButton.disabled = false; // Re-enable send button for next message
+        }
+
+        async function checkHarmfulLanguage(message, chatNumber) {
+            try {
+                const response = await fetch(`${API_URL}/check_harmful`, {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({ message: message }),
+                });
+                const data = await response.json();
+                return data.harmful;
+            } catch (error) {
+                console.error("Error checking message:", error);
+                return false;
+            }
+        }
+
+        async function checkInputForHarmfulContent(chatNumber) {
+            const inputField = document.getElementById(`userInput${chatNumber}`);
+            const sendButton = document.getElementById(`sendButton${chatNumber}`);
+            const tooltip = document.getElementById(`tooltip${chatNumber}`);
+            const messageText = inputField.value.trim();
+
+            if (messageText === "") {
+                sendButton.disabled = false;
+                updateTooltip(chatNumber, ""); // Remove tooltip
+                return;
+            }
+
+            if (restrictions[1] || restrictions[2]) {
+                const isHarmful = await checkHarmfulLanguage(messageText, chatNumber);
+                sendButton.disabled = isHarmful;
+                updateTooltip(chatNumber, isHarmful ? "Harmful content detected. Message blocked!" : "");
+            } else {
+                sendButton.disabled = false;
+                updateTooltip(chatNumber, ""); // Remove tooltip
+            }
+        }
+
+        function updateTooltip(chatNumber, message) {
+            const tooltip = document.getElementById(`tooltip${chatNumber}`);
+            if (message) {
+                tooltip.textContent = message;
+                tooltip.style.display = "block";
+                tooltip.style.opacity = "1";
+                tooltip.style.visibility = "visible";
+            } else {
+                tooltip.style.display = "none";
+                tooltip.style.opacity = "0";
+                tooltip.style.visibility = "hidden";
+            }
+        }
+
+        function addMessage(chatBox, text, className) {
+            const messageDiv = document.createElement("div");
+            messageDiv.className = "message " + className;
+            messageDiv.textContent = text;
+            messageDiv.style.marginTop = "20px";
+            chatBox.appendChild(messageDiv);
+            chatBox.scrollTop = chatBox.scrollHeight;
+        }
+
+        function handleKeyPress(event, chatNumber) {
+            if (event.key === "Enter") {
+                sendMessage(chatNumber);
+            }
+        }
+
+        // Show tooltip on hover when the button is disabled
+        document.addEventListener("DOMContentLoaded", () => {
+            [1, 2].forEach(chatNumber => {
+                const sendButton = document.getElementById(`sendButton${chatNumber}`);
+                const tooltip = document.getElementById(`tooltip${chatNumber}`);
+
+                sendButton.addEventListener("mouseenter", () => {
+                    if (sendButton.disabled && tooltip.textContent) {
+                        tooltip.style.display = "block";
+                        tooltip.style.opacity = "1";
+                        tooltip.style.visibility = "visible";
+                    }
+                });
+
+                sendButton.addEventListener("mouseleave", () => {
+                    tooltip.style.display = "none";
+                    tooltip.style.opacity = "0";
+                    tooltip.style.visibility = "hidden";
+                });
+            });
+        });
+
+        window.onload = function () {
+            setTimeout(() => {
+                addMessage(document.getElementById("chatBox1"), "\n\n🌟 Welcome! Stay positive and spread kindness! 😊 - ChatBox1", "bot-message");
+                addMessage(document.getElementById("chatBox2"), "\n\n🌟 Welcome! Stay positive and spread kindness! 😊 - ChatBox2", "bot-message");
+            }, 400);
+        };
+    </script>
+</body>
+</html>

@@ -1,0 +1,282 @@
+@keyframes fadeInScale {
+    0% {
+        opacity: 0;
+        transform: scale(0.8);
+    }
+    100% {
+        opacity: 1;
+        transform: scale(1);
+    }
+}
+
+.heading {
+    font-size: 30px;
+    font-weight: bold;
+    text-align: center;
+    margin-bottom: 15px;
+    color: white;
+    animation: fadeInScale 1.5s ease-in-out;
+    text-transform: uppercase;
+    background: rgba(0, 0, 0, 0.5);
+    padding: 10px 20px;
+    border-radius: 8px;
+}
+
+body {
+    font-family: 'Poppins', sans-serif;
+    background: url('WP1.jpg') no-repeat center center/cover;
+    color: white;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    margin: 0;
+}
+
+.chat-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 30px;
+    width: 90%;
+    max-width: 1000px;
+    height: 80vh;
+}
+
+.chat-box-wrapper {
+    width: 85%;
+    max-width: 400px;
+    height: 80vh;
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    background: #2e2e4e;
+    border-radius: 15px;
+    box-shadow: 0px 5px 15px rgba(0, 0, 0, 0.2);
+    overflow: hidden;
+    position: relative;
+}
+
+.chat-box {
+    flex-grow: 1;
+    padding: 40px 15px 15px;
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+}
+
+/* Message Styling */
+.message {
+    max-width: 75%;
+    padding: 12px;
+    margin: 6px;
+    border-radius: 10px;
+    word-wrap: break-word;
+    font-size: 14px;
+    opacity: 0;
+    transform: translateY(10px);
+    animation: fadeIn 0.5s ease-in-out forwards;
+}
+
+.user-message {
+    background-color: #007bff;
+    color: white;
+    align-self: flex-end;
+}
+
+.bot-message {
+    background-color: #444;
+    color: white;
+    align-self: flex-start;
+}
+
+/* Input and Send Button Styling */
+.input-container {
+    display: flex;
+    padding: 10px;
+    background: #3e3e4e;
+    border-top: 2px solid #57578a;
+    align-items: center;
+}
+.complaint-box {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    background: rgba(255, 0, 0, 0.8);
+    padding: 10px 15px;
+    border-radius: 8px;
+    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.2);
+    font-size: 14px;
+    font-weight: bold;
+}
+.complaint-box a {
+    color: white;
+    text-decoration: none;
+}
+.complaint-box:hover {
+    background: rgba(255, 0, 0, 1);
+}
+
+input {
+    flex-grow: 1;
+    padding: 12px;
+    border: none;
+    border-radius: 8px;
+    font-size: 16px;
+    outline: none;
+    font-family: 'Poppins', sans-serif;
+    background: white;
+    color: black;
+    border: 1px solid #ccc;
+}
+
+button {
+    margin-left: 10px;
+    padding: 12px 18px;
+    border: none;
+    background-color: #1d4e89;
+    color: white;
+    border-radius: 8px;
+    cursor: pointer;
+    font-weight: bold;
+    transition: 0.3s;
+}
+
+/* Toggle Button */
+.toggle-container {
+    position: absolute;
+    top: 10px;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+}
+
+.toggle-container.chat1 {
+    left: 10px;
+}
+
+.toggle-container.chat2 {
+    right: 10px;
+}
+
+.toggle-switch {
+    position: relative;
+    width: 50px;
+    height: 24px;
+    background: #ccc;
+    border-radius: 12px;
+    cursor: pointer;
+    transition: 0.3s;
+}
+
+.toggle-switch:before {
+    content: '';
+    position: absolute;
+    width: 20px;
+    height: 20px;
+    background: white;
+    border-radius: 50%;
+    top: 2px;
+    left: 2px;
+    transition: 0.3s;
+}
+
+.toggle-switch.active {
+    background: #4CAF50;
+}
+
+.toggle-switch.active:before {
+    left: 26px;
+}
+
+.toggle-text {
+    font-size: 14px;
+    font-weight: bold;
+}
+
+.toggle-text.off {
+    color: red;
+}
+
+/* Fade-in animation for messages */
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Send Button Styling */
+.send-button {
+    margin-left: 10px;
+    padding: 12px 18px;
+    border: none;
+    background-color: #1d4e89;
+    color: white;
+    border-radius: 8px;
+    cursor: pointer;
+    font-weight: bold;
+    transition: 0.3s;
+}
+
+/* Blurred send button */
+.send-button:disabled {
+    cursor: not-allowed;
+    opacity: 0.6;
+    filter: blur(1px);
+    pointer-events: none;
+}
+
+.tooltip {
+    position: absolute;
+    right: 100%; /* Moves it to the left of the button */
+    top: -100%;
+    transform: translateY(-50%);
+    background-color: #ff4d4d;
+    color: white;
+    padding: 5px 10px;
+    border-radius: 5px;
+    font-size: 12px;
+    display: none;
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 0.2s ease-in-out;
+    white-space: nowrap;
+    z-index: 1000;
+    margin-right: 5px; /* Space between button and tooltip */
+}
+
+
+.send-button-container {
+    position: relative;
+}
+
+.send-button-container:hover .tooltip {
+    opacity: 1;
+    visibility: visible;
+}
+
+@media screen and (max-width: 768px) {
+    .chat-container {
+        flex-direction: column;
+        height: auto;
+        gap: 20px;
+    }
+    .chat-box-wrapper {
+        width: 90%;
+        height: 50vh;
+    }
+    .input-container {
+        flex-direction: column;
+        align-items: stretch;
+    }
+    button {
+        width: 100%;
+        margin-top: 5px;
+    }
+}
