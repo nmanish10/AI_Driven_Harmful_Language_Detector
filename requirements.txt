@@ -9,7 +9,6 @@ unidecode
 discord.py
 asyncio
 logging
-requests
 nest_asyncio
 python-dotenv
 flask
